@@ -2,8 +2,9 @@
 
     <div class="card w-100">
         <div class="card-body">
-            <h5 class="card-title">{{title}}</h5>
-            <h5 class="card-text">{{description}}</h5>
+            <router-link   :to="{name:'bookable', params:{id: id}}" class="navbar-brand mr-auto"><h5 class="card-title">{{title}}</h5></router-link>
+<!--            <h5 class="card-title">{{title}}</h5>-->
+            <p class="card-text">{{description}}</p>
         </div>
 
     </div>
@@ -13,7 +14,7 @@
 
     export default {
         name: "BookablesListItem",
-        props:['title', 'description'],
+        props:['title', 'description','id'],
 
     }
 
