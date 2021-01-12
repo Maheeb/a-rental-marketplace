@@ -9,8 +9,7 @@
 
         </h6>
 
-<!--        <h1 class="text-success" v-if="hasAvailability"> Available</h1>-->
-<!--        <h1 class="text-danger" v-if="noAvailability"> Not Available</h1>-->
+
 
 
         <div class="form-row">
@@ -40,6 +39,10 @@
 <script>
     export default {
         name: "Availability",
+        props:{
+          bookableId : String | Number,
+            default: ''
+        },
 
         data() {
             return {
@@ -58,7 +61,8 @@
 
                 this.loading = true;
                 this.errors = null;
-                axios.get(`/api/bookables/${this.$route.params.id}/availability?from= ${this.from}&to=${this.to}`).then(
+                // axios.get(`/api/bookables/${this.$route.params.id}/availability?from= ${this.from}&to=${this.to}`).then(
+                axios.get(`/api/bookables/${this.bookableId}/availability?from= ${this.from}&to=${this.to}`).then(
                     response => {
                         this.status = response.status;
 
@@ -71,7 +75,7 @@
                     this.status = error.response.status;
                 })
                     .then(() => (this.loading = false));
-                // axios.get(`/api/bookables/${this.$route.params.id}/availability?from= ${this.from}&to=${this.to}`)
+
             },
             errorFor(field){
                 return this.hasErrors && this.errors[field] ? this.errors[field] : null;
