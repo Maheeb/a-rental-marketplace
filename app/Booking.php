@@ -2,8 +2,9 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use PhpParser\Builder;
+//use PhpParser\Builder;
 
 class Booking extends Model
 {
@@ -19,7 +20,7 @@ class Booking extends Model
     public function scopeBetweenDates(Builder $query, $from,$to)
     {
 
-        return $query->where('to' >= $from)->where('from' <= $to);
+        return $query->where('to', '>=', $from)->where('from', '<=', $to);
 
     }
 

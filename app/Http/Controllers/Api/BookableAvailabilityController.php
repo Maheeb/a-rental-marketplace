@@ -18,13 +18,16 @@ class BookableAvailabilityController extends Controller
     {
 
         $data = $request->validate([
-            'from' => 'required|date_format:Y-md-d|after_or_equal:now',
-            'to' => 'required|date_format:Y-md-d|after_or_equal:from'
+            'from' => 'required|date_format:Y-m-d|after_or_equal:now',
+            'to' => 'required|date_format:Y-m-d|after_or_equal:from'
 
         ]);
+//        dd($data);
 
         $bookable = Bookable::findOrFail($id);
-
+//        dd($bookable->bookings()->betweenDates($data['from'],$data['to'])->count());
+//        dd($bookable->availableFor($data['from'],$data['to']));
+//
         return ($bookable->availableFor($data['from'],$data['to'])) ? response()->json([]): response()->json([],404);
 
     }
