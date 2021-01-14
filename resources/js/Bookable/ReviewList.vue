@@ -2,16 +2,19 @@
     <div style="padding: 1.25rem">
         <h6 class="text-uppercase text-secondary font-weight-bolder pt-4">Review List</h6>
 
+
         <div v-if="loading">Loading...</div>
         <div v-else>
             <div class="border-bottom d-none d-md-block" v-for="(review,index) in reviews" :key="index">
                 <div class="row">
                     <div class="col-md-6">Maheeb Azmaeen</div>
-                    <div class="col-md-6 d-flex justify-content-end">{{review.rating}}</div>
+                    <div class="col-md-6 d-flex justify-content-end">{{review.rating}}
 
+                        <star-rating :value="review.rating" class="fa-lg"></star-rating>
+                    </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">{{review.created_at}}</div>
+                    <div class="col-md-12">{{review.created_at | fromNow}}</div>
                 </div>
                 <div class="row pt-4 pb-4">
                     <div class="col-md-12">{{review.content}}</div>
@@ -25,6 +28,7 @@
 </template>
 
 <script>
+    import moment from "moment";
     export default {
         name: "ReviewList",
         props:{
@@ -38,6 +42,14 @@
                 reviews: null
             }
         },
+        // filters:{
+        //   fromNow(value){
+        //       return  moment(value).fromNow();
+        //
+        //   }
+        //
+        // },
+
         created(){
 
             this.loading = true;

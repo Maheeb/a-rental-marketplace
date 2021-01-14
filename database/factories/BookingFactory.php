@@ -12,5 +12,6 @@ $factory->define(\App\Booking::class, function (Faker $faker) {
     return [
         'from' =>$from,
         'to' =>$to,
+
     ];
 });
