@@ -1,8 +1,10 @@
 <template>
     <div>
-        <div class="row" v-if="error">Unknown error has occured, please try again later</div>
-
-        <div class="row" v-else>
+<!--        <div class="row" v-if="error">Unknown error has occured, please try again later</div>-->
+        <success v-if="success">You have a left a review, thank you very much</success>
+        <fatal-error v-if="error"></fatal-error>
+<!--        <div class="row" v-else>-->
+        <div class="row" v-if="!success && !error">
             <div :class="[{'col-md-4': twoColumns}, {'d-none' : oneColumn}]">
                 <div class="card">
                     <div class="card-body">
@@ -38,10 +40,13 @@
                         </div>
                         <div class="form-group">
                             <label for="content" class="text-muted">Describe your experience with</label>
-                            <textarea name="content" id="" class="form-control" cols="30" rows="10" v-model="review.content"></textarea>
-                        </div>
+                            <textarea name="content" id="" class="form-control" cols="30" rows="10" v-model="review.content"
 
-                        <button class="btn btn-lg btn-primary btn-block" @click.prevent="submit" :disabled="loading">Submit</button>
+                                      :class="[{'is-invalid': errorFor('content')}]"
+                            ></textarea>
+                        </div>
+                        <div class="invalid-feedback" v-for="(error,index) in errorFor('content')" :key="index + 'content'">{{error}}</div>
+                        <button class="btn btn-lg btn-primary btn-block" @click.prevent="submit" :disabled="sending">Submit</button>
 
                     </div>
 
@@ -54,7 +59,7 @@
 </template>
 
 <script>
-    import {is404} from "../Shared/utils/response";
+    import {is404, is422} from "../Shared/utils/response";
 
     export default {
         name: "Review",
@@ -68,7 +73,10 @@
                 existingReview :null,
                 loading:false,
                 booking: null,
-                error: false
+                error: false,
+                errors: null,
+                sending: false,
+                success : false
             }
         },
 
@@ -137,11 +145,37 @@
         },
         methods:{
             submit(){
-                this.loading = true;
+                this.errors = null;
+                this.sending = true;
+                this.success = false;
                 axios.post(`/api/reviews`, this.review)
-                    .then(response => console.log(response))
-                    .catch(err => (this.error = true))
-                    .then(()=>(this.loading = false))
+                    .then(response => {
+
+                        this.success =201 === response.status
+                        }
+                    )
+                    .catch(err => {
+
+                        if(is422(err)){
+
+                            const errors = err.response.data.errors;
+
+                            if (errors['content'] && 1 === _.size(errors)){
+
+                                this.errors = errors
+                                return;
+                            }
+
+
+                        }
+                        (this.error = true)
+                    })
+                    .then(()=>(this.sending = false))
+            },
+            errorFor(field){
+                return null !== this.errors && this.errors[field]
+                ? this.errors[field]
+                 :null;
             }
 
         }

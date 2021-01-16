@@ -37,6 +37,8 @@
 </template>
 
 <script>
+    import {is422} from "../Shared/utils/response";
+
     export default {
         name: "Availability",
         props:{
@@ -69,7 +71,7 @@
                         // console.log(this.status)
                     })
                     .catch(error => {
-                    if (422 === error.response.status) {
+                    if (is422(error)) {
                         this.errors = error.response.data.errors;
                     }
                     this.status = error.response.status;
